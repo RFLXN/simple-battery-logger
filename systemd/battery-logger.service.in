@@ -1,0 +1,12 @@
+[Unit]
+Description=Battery level logger
+ConditionPathExistsGlob=/sys/class/power_supply/*/capacity
+
+[Service]
+Type=oneshot
+ExecStart=@out@/bin/battery-logger
+User=root
+Group=root
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
