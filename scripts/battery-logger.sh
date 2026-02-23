@@ -59,10 +59,20 @@ if [[ -z "${capacity_file}" ]]; then
   exit 1
 fi
 
+battery_dir="$(dirname "${capacity_file}")"
+
 level="$(tr -dc '0-9' < "${capacity_file}")"
 if [[ -z "${level}" ]] || (( level < 0 || level > 100 )); then
   echo "battery-logger: invalid capacity value: ${level:-<empty>}" >&2
   exit 1
+fi
+
+charging="false"
+if [[ -r "${battery_dir}/status" ]]; then
+  status_value="$(<"${battery_dir}/status")"
+  if [[ "${status_value}" == "Charging" ]]; then
+    charging="true"
+  fi
 fi
 
 date_value="$(date --iso-8601=seconds)"
@@ -80,15 +90,16 @@ fi
 chmod 0644 "${LOG_FILE}"
 
 last_level="$(jq -r 'if type == "array" and length > 0 then .[-1].level // "" else "" end | tostring' "${LOG_FILE}")"
-if [[ "${last_level}" == "${level}" ]]; then
+last_charging="$(jq -r 'if type == "array" and length > 0 then (.[-1].charging | if . == null then "" else tostring end) else "" end' "${LOG_FILE}")"
+if [[ "${last_level}" == "${level}" ]] && [[ "${last_charging}" == "${charging}" ]]; then
   exit 0
 fi
 
 tmp_file="$(mktemp "${LOG_FILE}.tmp.XXXXXX")"
 trap 'rm -f "${tmp_file}"' EXIT
 
-jq --arg date "${date_value}" --arg level "${level}" \
-  '. + [{"date": $date, "level": $level}]' \
+jq --arg date "${date_value}" --arg level "${level}" --argjson charging "${charging}" \
+  '. + [{"date": $date, "level": $level, "charging": $charging}]' \
   "${LOG_FILE}" > "${tmp_file}"
 
 chmod 0644 "${tmp_file}"

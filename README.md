@@ -4,7 +4,7 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 
 ## Features
 
-- Appends to a JSON log only when battery percentage changes
+- Appends to a JSON log only when battery percentage or charging state changes
 - Uses `flock` to prevent concurrent write corruption
 - Keeps log file readable by all users (`0644`)
 - Supports explicit battery device name (useful on Asahi: `macsmc-battery`)
@@ -15,7 +15,8 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 [
   {
     "date": "2026-02-23T15:30:00+00:00",
-    "level": "100"
+    "level": "100",
+    "charging": true
   }
 ]
 ```
@@ -51,7 +52,7 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 
 ```nix
 {
-  inputs.battery-logger.url = "path:/home/rflxn/development/battery-logger";
+  inputs.battery-logger.url = "path:./battery-logger";
 }
 ```
 
