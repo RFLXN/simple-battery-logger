@@ -25,7 +25,7 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 
 ```nix
 {
-  inputs.battery-logger.url = "github:MY_USERNAME/REPONAME";
+  inputs.battery-logger.url = "github:RFLXN/simple-battery-logger";
 
   outputs = { self, nixpkgs, battery-logger, ... }: {
     nixosConfigurations.my-host = nixpkgs.lib.nixosSystem {
