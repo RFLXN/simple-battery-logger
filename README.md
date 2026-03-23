@@ -4,19 +4,21 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 
 ## Features
 
-- Appends to a JSON log only when battery percentage or charging state changes
+- Appends to a JSON log on every timer interval
 - Uses `flock` to prevent concurrent write corruption
 - Keeps log file readable by all users (`0644`)
 - Supports explicit battery device name (useful on Asahi: `macsmc-battery`)
+- Detects external power independently from charging state via `ac_on`
 
 ## Log format
 
 ```json
 [
   {
-    "date": "2026-02-23T15:30:00+00:00",
-    "level": "100",
-    "charging": true
+    "data": "2026-02-23T15:30:00+00:00",
+    "level": 100,
+    "charging": true,
+    "ac_on": false
   }
 ]
 ```
