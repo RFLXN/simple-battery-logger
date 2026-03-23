@@ -15,7 +15,7 @@ Simple battery logger for NixOS using a system-level `systemd` timer.
 ```json
 [
   {
-    "data": "2026-02-23T15:30:00+00:00",
+    "date": "2026-02-23T15:30:00+00:00",
     "level": 100,
     "charging": true,
     "ac_on": false

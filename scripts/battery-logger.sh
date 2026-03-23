@@ -123,8 +123,8 @@ chmod 0644 "${LOG_FILE}"
 tmp_file="$(mktemp "${LOG_FILE}.tmp.XXXXXX")"
 trap 'rm -f "${tmp_file}"' EXIT
 
-jq --arg data "${date_value}" --argjson level "${level}" --argjson charging "${charging}" --argjson ac_on "${ac_on}" \
-  '. + [{"data": $data, "level": $level, "charging": $charging, "ac_on": $ac_on}]' \
+jq --arg date "${date_value}" --argjson level "${level}" --argjson charging "${charging}" --argjson ac_on "${ac_on}" \
+  '. + [{"date": $date, "level": $level, "charging": $charging, "ac_on": $ac_on}]' \
   "${LOG_FILE}" > "${tmp_file}"
 
 chmod 0644 "${tmp_file}"
